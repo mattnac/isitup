@@ -17,9 +17,6 @@ def main():
   req_queue = MonitoringQueue.get_queue()
   launch_api()
 
-  logging.debug("In main function")
-  logging.debug(f"Queue size current: {req_queue.qsize()}")
-
   while True:
     if not req_queue.empty():
       monitor = req_queue.get()
@@ -48,7 +45,7 @@ def start_run(item: SiteEntry):
   """
   monitor = Monitor(item)
   logging.info(monitor)
-  logging.info(f"Starting thread on {monitor.name}")
+  logging.debug(f"Starting thread on {monitor.name}")
   threading.Thread(target=monitor.start_monitor, args=[]).start()
 
 

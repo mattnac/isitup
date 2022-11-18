@@ -35,7 +35,7 @@ class Monitor:
       else:
         failure += 1
 
-      logging.info(f"Request fired, sleeping for interval. successes so far: {success}")
+      logging.debug(f"Request fired, sleeping for {self.site_entry.interval}. Successes so far: {success}")
       time.sleep(self.site_entry.interval)
   
   def stop_monitor(self):
