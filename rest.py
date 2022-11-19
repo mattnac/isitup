@@ -1,4 +1,3 @@
-import json
 from flask import Flask, jsonify, request
 from queue_item import SiteEntry
 from main import MonitoringQueue, Monitor
@@ -20,6 +19,6 @@ def start_server():
       queue.put(queue_item)
       return("", 201)
     except:
-      raise ValueError(f"Unable to add {queue_item} to queue")
+      raise ValueError(f"Unable to add {queue_item.name} to queue")
 
   app.run(debug=True)

@@ -24,11 +24,12 @@ class Monitor:
   def _format_url(host: str, path: str = "", https: bool = True, **kwargs):
     return(f"{'https' if https else 'http'}://{host}{path}")
 
+
   def start_monitor(self):
     success, failure = 0, 0
     url = Monitor._format_url(host=self.site_entry.address, https=self.site_entry.https)
     while self.site_entry.active == True:
-      logging.debug(f"Firing of request to {self.site_entry.name}")
+      logging.debug(f"Firing off request to {self.site_entry.name}")
       r = requests.get(url)
       if r.status_code >= 200 and r.status_code < 300:
         success += 1

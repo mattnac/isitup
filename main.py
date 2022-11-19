@@ -61,9 +61,15 @@ def configure_logging() -> None:
   Setup logging
   """
   log_level = logging.INFO
-  logging.root.setLevel(log_level)
   log_format = "  %(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s"
   formatter = ColoredFormatter(log_format)
+
+  stream = logging.StreamHandler()
+  stream.setLevel(log_level)
+  stream.setFormatter(formatter)
+
+  logging.root.setLevel(log_level)
+  logging.root.addHandler(stream)
 
 if __name__ == "__main__":
   main()
