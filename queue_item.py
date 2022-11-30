@@ -1,5 +1,7 @@
 import logging
 
+logger = logging.getLogger()
+
 class SiteEntry:
 
   def __init__(self, name: str, address: str, https: bool, interval: float, active: bool) -> None:
@@ -11,11 +13,12 @@ class SiteEntry:
 
   @property
   def active(self) -> bool:
-    logging.debug(f"Getter for _active called")
+    logger.info(f"Getter for _active called, active is {self._active}")
     return self._active
 
   @active.setter
   def active(self, active):
+    logger.info(f"Setter for _active called.")
     if active:
       self._active = active
     else:
