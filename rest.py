@@ -1,11 +1,15 @@
 from flask import Flask, jsonify, request
+from flask.logging import default_handler
 from queue_item import SiteEntry
 from main import MonitoringQueue, Monitor
 import asyncio
+import logging
 
 
-def start_server():
+async def start_server():
   app = Flask(__name__)
+  logger = logging.getLogger()
+  logger.addHandler(default_handler)
 
   @app.route('/')
   def index():

@@ -21,17 +21,18 @@ async def main():
     if not req_queue.empty():
       logging.info(f" Queue size: {req_queue.qsize()}")
       monitor = await req_queue.get()
-      logging.info(type(monitor))
       if monitor.active:
         logging.info(f"Active for {monitor.name} set, creating task.")
-        run = asyncio.create_task(start_run(monitor))
-        logging.info(f"Async task created for {run}")
-        logging.info(f"Awaiting run")
-        await run
+        #run = create_task(start_run(monitor))
+        #logging.info(f"Async task created for {run.get_name()}")
+        logging.info(f"Awaiting start_run")
+        #await run
+        await start_run(monitor)
         logging.info(f"Task started, marking as done in queue.")
         req_queue.task_done()
       elif not monitor.active:
         logging.info(f"Active for {monitor.name} is false, cancelling run.")
+        #run.cancel()
         stop_run(monitor)
       else:
         raise ValueError(f"Invalid value for <entity>.active, must be true or false, got {monitor.active}")
@@ -42,17 +43,23 @@ async def launch_api():
   Function responsible for launching the API server
   """
   logging.info(f"Starting API server")
-  rest.start_server()
+  await rest.start_server()
 
 
-async def start_run(item: SiteEntry):
+async def start_run(monitor: Monitor):
   """
   Initialise a run for a site
   """
-  monitor = Monitor(item)
-  logging.info("IN START_RUN")
   logging.info(f"Starting thread on {monitor.name}")
-  await monitor.start_monitor()
+  while True:
+    res = await monitor.start_monitor()
+    if res.status_code >= 200 and res.status_code < 300:
+      success += 1
+    else:
+      failure += 1
+    logging.info(f"Request sent, now sleeping")
+    asyncio.sleep(monitor.site_entry.interval)
+    logging.info(f"sleep done")
 
 
 def stop_run(monitor: Monitor):
@@ -66,9 +73,9 @@ async def create_task(item: SiteEntry) -> Task:
   logging.info(f"Name is {item.name}")
   task = asyncio.create_task(
     start_run(item),
-    name=f"Run for {item.name}"
+    name=item.name
   )
-  logging.debug=(f"Created task: {task}")
+  logging.info=(f"Created task: {task}")
   return task
 
 

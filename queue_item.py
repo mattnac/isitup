@@ -1,6 +1,5 @@
 import logging
 
-logger = logging.getLogger()
 
 class SiteEntry:
 
@@ -10,15 +9,16 @@ class SiteEntry:
     self.https = https
     self.interval = interval
     self._active: bool = active
+    self._logger = logging.getLogger(self.__class__.__name__)
 
   @property
   def active(self) -> bool:
-    logger.info(f"Getter for _active called, active is {self._active}")
+    self._logger.info(f"Getter for _active called, active is {self._active}")
     return self._active
 
   @active.setter
-  def active(self, active):
-    logger.info(f"Setter for _active called.")
+  def active(self, active: bool):
+    self._logger.info(f"Setter for _active called.")
     if active:
       self._active = active
     else:
